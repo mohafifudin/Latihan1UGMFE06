@@ -6,27 +6,29 @@ import axios from "axios";
 
 class App extends React.Component {
   state = {
-    listMeals: [],
+    listCategory: [],
     isLoading: true,
     errors: null
   };
 
-  getUsers() {
+  getCategories() {
   // We're using axios instead of Fetch
   axios
     // The API we're requesting data from
-    .get("https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood")
+    .get("https://www.themealdb.com/api/json/v1/1/categories.php")
     // Once we get a response, we'll map the API endpoints to our props
     .then(response =>
-      response.data.meals.map(meal => ({
-        name: `${meal.strMeal}`,
-        image: `${meal.strMealThumb}`
+      response.data.categories.map(meal => ({
+        id: `${meal.idCategory}`,
+        name: `${meal.strCategory}`,
+        image: `${meal.strCategoryThumb}`,
+        desc: `${meal.strCategoryDescription}`
       }))
     )
     // Let's make sure to change the loading state to display the data
-    .then(listMeals => {
+    .then(listCategory => {
       this.setState({
-        listMeals,
+        listCategory,
         isLoading: false
       });
     })
@@ -35,23 +37,25 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.getUsers();
+    this.getCategories();
   }
 
   render() {
-    const { isLoading, listMeals } = this.state;
+    const { isLoading, listCategory } = this.state;
     return (
       <React.Fragment>
-        <h2>Random User</h2>
+        <h2>All Food Categories</h2>
         <div>
           {!isLoading ? (
-            listMeals.map(meal => {
-              const {name, image } = meal;
+            listCategory.map(meal => {
+              const {id, name, image, desc} = meal;
               return (
-                <div>
+                <div key={id}>
                   <p>{name}</p>
                   <div>
                     <img src={image} alt={name} width="50px" height="50px" />
+                    <p>{desc}</p>
+                    <button>Liat Menu</button>
                   </div>
                   <hr />
                 </div>
